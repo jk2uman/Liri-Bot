@@ -6,7 +6,18 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juliank2/Liri-Bot.git"
+  },
   "author": "Julian Hicks",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juliank2/Liri-Bot.git/issues"
+  },
+
+"homepage": "https://github.com/juliank2/Liri-Bot.git#readme",
+"dependencies": {
+  "spotify": ""
+  }
 }
