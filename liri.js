@@ -3,15 +3,16 @@ require("dotenv").config();
 var keys = require("./keys.js");
 var fs = require("fs");
 var request = require("request");
-var Concert = require("concert");
 //var Spotify = require('spotify-web-api-node');
-var Spotify = require(' https://api.spotify.com');
+var Spotify = require('node-spotify-api');
+var spotify = new Spotify(keys.spotify);
 //creates log.txt file
 var filename = './';
 //NPM module used to write output to console and log.txt simulatneously
 var log = require('simple-node-logger').createSimpleFileLogger(filename);
 log.setLevel('all');
 
+var chalk = require('chalk');
 //argv[2] chooses users actions; argv[3] is input parameter, ie; movie title
 var usersCommand = process.argv[2];
 var secondaryCommand = process.argv[3];
@@ -28,21 +29,68 @@ function mySwitch() {
     switch (usersCommand) {
 
         case "concert-this":
-            concertGo();
+            bandsInTown(secondaryCommand);
             break;
 
         case "spotify-this-song":
-            songSpotify();
+            songSpotify(secondaryCommand);
             break;
 
         case "movie-this":
-            getMovie();
+            getMovie(secondaryCommand);
             break;
 
         case "do-what-it-says":
             whatItSays();
             break;
     }
+ //Bands In Town
+
+ function bandsInTown(secondaryCommand) {
+
+if ("concert-this")
+{
+    var artist="";
+    for (var i=3; i < process.argv.length; i++)
+    {
+        artist+=process.argv[i];
+    }
+}
+else
+{
+    artist = secondaryCommand
+}
+
+var queryUrl = "https://rest.bandsintown.com/artists/"+ artist +"/events?app_id=codingbootcamp";
+
+request(queryUrl, function(error, response, body) {
+
+    if (!error && response.statusCode === 200) {
+  
+      var JS = JSON.parse(body);
+      for (i = 0; i < JS.length; i++)
+      {
+        var dateTime = JS[i].datetime;
+          var month = dateTime.substring(5,7);
+          var year = dateTime.substring(0,4);
+          var day = dateTime.substring(8,10);
+          var dateForm = month + "/" + day + "/" + year
+    
+        display(chalk.blue("\n---------------------------------------------------\n"));
+        display(chalk.green("Name: " + JS[i].venue.name));
+        display(chalk.green("City: " + JS[i].venue.city));
+        if (JS[i].venue.region !== "")
+        {
+          display(chalk.green("Country: " + JS[i].venue.region));
+        }
+        display(chalk.green("Country: " + JS[i].venue.country));
+        display(chalk.green("Date: " + dateForm));
+        display(chalk.blue("\n---------------------------------------------------\n"));
+  
+      }
+    }
+  });
+ }
  //Spotify - command: spotify-this-song
  function songSpotify(trackName) {
      var trackName = process.argv[4];

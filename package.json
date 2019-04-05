@@ -15,9 +15,11 @@
   "bugs": {
     "url": "https://github.com/juliank2/Liri-Bot.git/issues"
   },
-
-"homepage": "https://github.com/juliank2/Liri-Bot.git#readme",
-"dependencies": {
-  "spotify": ""
+  "homepage": "https://github.com/juliank2/Liri-Bot.git#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "dotenv": "^7.0.0",
+    "node-spotify-api": "^1.0.7",
+    "spotify": ""
   }
 }
