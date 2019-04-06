@@ -9,8 +9,28 @@ var spotify = new Spotify(keys.spotify);
 
 var usersCommand = process.argv[2];
 var secondaryCommand = process.argv[3];
+//Switch command
+function userCommand(usersCommand, secondaryCommand) {    
+    //choose which statement (userCommand) to switch to and execute
+    switch (usersCommand) {
+        case "concert-this":
+        concertThis();
+        break;
+        case "spotify-this":
+        spotifySong();
+        break;
+        case "movie-this":
+        getMovie();
+        break;
+        case "do-what-it-says":
+        whatItSays(secondaryCommand);
+        break;
+        default: 
+        console.log("It Didn't Work")
+    }
+}
+userCommand(usersCommand, secondaryCommand);
 //Bands In Town
-
  function concertThis() {
      axios.
         get("https://rest.bandsintown.com/artists/"+ secondaryCommand +"/events?app_id=codingbootcamp"
@@ -20,7 +40,7 @@ var secondaryCommand = process.argv[3];
              
              console.log("Venue Name: "+ response.data[i].venue.name);
              console.log("Venue Location: "+ response.data[i].venue.city + ", " + response.data[i].venue.country);
-             console.log("Date of the Event: " + moment(response.data[i].datetime).format("L"));
+             console.log("Date of the Event: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
          }
          console.log('\n');
      });
@@ -70,23 +90,4 @@ function whatItSays() {
         songSpotify();
     });
 }
-    //Switch command
-    //choose which statement (userCommand) to switch to and execute
-    switch (usersCommand) {
-
-        case "concert-this":
-            concertThis();
-            break;
-
-        case "spotify-this-song":
-            songSpotify();
-            break;
-
-        case "movie-this":
-            getMovie();
-            break;
-
-        case "do-what-it-says":
-            whatItSays();
-            break;
-    }
+    
