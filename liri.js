@@ -6,13 +6,20 @@ var fs = require("fs");
 var axios = require("axios");
 var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
+var moment = require('moment');
 
-var usersCommand = process.argv[2];
-var secondaryCommand = process.argv[3];
-//Switch command
-function userCommand(usersCommand, secondaryCommand) {    
-    //choose which statement (userCommand) to switch to and execute
-    switch (usersCommand) {
+var jsdom = require('jsdom');
+const {JSDOM} = jsdom;
+const {window} = new JSDOM();
+const {document} = new JSDOM('').window;
+global.document = document;
+
+var $ = (jQuery = require('jquery')(window));
+
+var users = process.argv[2];
+var secondValue = process.argv[3];   
+//choose which statement (userCommand) to switch to and execute
+    switch (users) {
         case "concert-this":
         concertThis();
         break;
@@ -23,47 +30,62 @@ function userCommand(usersCommand, secondaryCommand) {
         getMovie();
         break;
         case "do-what-it-says":
-        whatItSays(secondaryCommand);
+        whatItSays();
         break;
         default: 
         console.log("It Didn't Work")
     }
-}
-userCommand(usersCommand, secondaryCommand);
 //Bands In Town
  function concertThis() {
-     axios.
-        get("https://rest.bandsintown.com/artists/"+ secondaryCommand +"/events?app_id=codingbootcamp"
+     axios
+        .get(
+        "https://rest.bandsintown.com/artists/" + secondValue + "/events?app_id=codingbootcamp"
         )
      .then(function (response) {
-         for (var i = 0; i < response.data.length; i++) {
-             
-             console.log("Venue Name: "+ response.data[i].venue.name);
-             console.log("Venue Location: "+ response.data[i].venue.city + ", " + response.data[i].venue.country);
-             console.log("Date of the Event: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
-         }
-         console.log('\n');
-     });
-} 
+         $.each(response.data, function(index, value) {
+            console.log('Name of the venue', value.venue.name);
+            console.log('Venue location', value.venue.country);
+            console.log(
+              'Date of the Event',
+              moment(value.venue.datetime).format('MM-DD-YYYY')
+            );
+             console.log('\n');
+        });
+     })
+     .catch(function(error) {
+        console.log(error);
+      });
+  }
  //Spotify - command: spotify-this-song
- function songSpotify() {
+ function spotifySong() {
      spotify
-        .search({type: "track", query: secondaryCommand})
+        .search({type: "track", query: secondValue})
         .then(function(response){
             if (response.tracks.items.length > 0) {
-
+                $.each(response.tracks.items, function(index, value) {
+                    $.each(value.artists, function(index, value) {
+                        console.log("Artist ",value.name);
+                    });
+                    console.log("Song Name ", value.name);
+                    console.log("spotify song url", value.external_url.spotify);
+                    console.log("Album ", value.album.name);
+                    console.log('\n');
+                });
+            } else {
+                secondValue = "The Sign";
+                songSpotify();
             }
-            console.log("Artist: " + usersSong[0].artists[0].name);
-            console.log("Song Name: " + usersSong[0].name);
-            console.log("Preview Link: " + usersSong[0].preview_url);
-            console.log("Album: " + usersSong[0].album.name);
+        })
+        .catch(function(err) {
+          console.log(err);
         });
 }
+
     
  //OMDB Movie - command: movie-this
  function getMovie() {
-     var url = ("http://www.omdbapi.com/?i=" + secondaryCommand + "&apikey=" + keys.omdb.key) 
-// API key "http://www.omdbapi.com/?i=tt3896198&apikey=6fc1a4bf"
+     var url = ("http://www.omdbapi.com/?i=" + secondValue + "&apikey=" + keys.omdb.key) 
+
     axios
     .get(url)
     .then(function(response) {
@@ -75,18 +97,25 @@ userCommand(usersCommand, secondaryCommand);
         console.log("Plot: " + response.data.Plot);
         console.log("Cast: " + response.data.Actors);
 
-    });
+        $each(response.data.Ratings, function(index, value) {
+            if (value.Source == 'Rotten Tomatoes') {
+                console.log('Rotten Tomatoes Rating', value.Value);
+            }
+        });
+    })        
+    .catch(function(error) {
+        console.log(error);
+      });  
  }
-
 //Function for command do-what-it-says; reads and splits random.txt file
 //command: do-what-it-says
 function whatItSays() {
     //Read random.txt file
-    fs.readFile("random.txt", "utf8", function(err, data) {
+    fs.readFile('random.txt', "utf8", function(err, data) {
         if (err) throw err;
         var readArray = data.split(",");
         
-        secondaryCommand = readArray[1];
+        secondValue = readArray[1];
         songSpotify();
     });
 }
