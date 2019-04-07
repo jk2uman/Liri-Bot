@@ -1,11 +1,11 @@
 // Use dotenv to read .env vars into Node
 require("dotenv").config();
 //vars
-var keys = require("./keys.js");
 var fs = require("fs");
 var axios = require("axios");
+const {spotifykey, omdb} = require("./key.js")
 var Spotify = require('node-spotify-api');
-var spotify = new Spotify(keys.spotify);
+var spotify = new Spotify(spotifykey);
 var moment = require('moment');
 
 var jsdom = require('jsdom');
@@ -18,7 +18,7 @@ var $ = (jQuery = require('jquery')(window));
 
 var users = process.argv[2];
 var secondValue = process.argv[3];   
-//choose which statement (userCommand) to switch to and execute
+//choose which statement (users) to switch to and execute
     switch (users) {
         case "concert-this":
         concertThis();
@@ -37,17 +37,19 @@ var secondValue = process.argv[3];
     }
 //Bands In Town
  function concertThis() {
+     console.log(spotifykey);
      axios
         .get(
         "https://rest.bandsintown.com/artists/" + secondValue + "/events?app_id=codingbootcamp"
         )
      .then(function (response) {
+         console.log(response.data);
          $.each(response.data, function(index, value) {
             console.log('Name of the venue', value.venue.name);
             console.log('Venue location', value.venue.country);
             console.log(
               'Date of the Event',
-              moment(value.venue.datetime).format('MM-DD-YYYY')
+              moment(value.datetime).format('MM-DD-YYYY')
             );
              console.log('\n');
         });
@@ -67,7 +69,7 @@ var secondValue = process.argv[3];
                         console.log("Artist ",value.name);
                     });
                     console.log("Song Name ", value.name);
-                    console.log("spotify song url", value.external_url.spotify);
+                    console.log("spotify song url", value.external_urls.spotify);
                     console.log("Album ", value.album.name);
                     console.log('\n');
                 });
@@ -80,15 +82,15 @@ var secondValue = process.argv[3];
           console.log(err);
         });
 }
-
-    
  //OMDB Movie - command: movie-this
  function getMovie() {
-     var url = ("http://www.omdbapi.com/?i=" + secondValue + "&apikey=" + keys.omdb.key) 
+
+    var url = `http://www.omdbapi.com/?t=${secondValue}&apikey=${omdb.key}`;
 
     axios
     .get(url)
     .then(function(response) {
+        console.log(response);
         console.log("Title: " + response.data.Title);
         console.log("Year Released: " + response.data.Year);
         console.log("IMDB rating: " + response.data.imdbRating);
@@ -97,11 +99,6 @@ var secondValue = process.argv[3];
         console.log("Plot: " + response.data.Plot);
         console.log("Cast: " + response.data.Actors);
 
-        $each(response.data.Ratings, function(index, value) {
-            if (value.Source == 'Rotten Tomatoes') {
-                console.log('Rotten Tomatoes Rating', value.Value);
-            }
-        });
     })        
     .catch(function(error) {
         console.log(error);
@@ -116,7 +113,7 @@ function whatItSays() {
         var readArray = data.split(",");
         
         secondValue = readArray[1];
-        songSpotify();
+        spotifySong();
     });
 }
     

@@ -1,6 +1,7 @@
-exports.spotify = {
-    id: process.env.SPOTIFY_ID,
-    secret:process.env.SPOTIFY_SECRET
+require("dotenv").config()
+exports.spotifykey = {
+    id: process.env.Client_ID,
+    secret:process.env.Client_SECRET
 };
 
 exports.omdb = {
