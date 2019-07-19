@@ -17,10 +17,11 @@
   },
   "homepage": "https://github.com/juliank2/Liri-Bot.git#readme",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "dotenv": "^7.0.0",
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "jsdom": "^14.0.0",
+    "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "node-spotify-api": "^1.0.7",
     "save": "^2.3.3"
