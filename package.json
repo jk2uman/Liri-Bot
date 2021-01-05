@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/juliank2/Liri-Bot.git#readme",
   "dependencies": {
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "dotenv": "^7.0.0",
     "jquery": "^3.5.1",
     "jsdom": "^14.1.0",
