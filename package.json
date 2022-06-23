@@ -20,7 +20,7 @@
     "axios": "^0.18.1",
     "dotenv": "^7.0.0",
     "jquery": "^3.5.1",
-    "jsdom": "^14.1.0",
+    "jsdom": "^16.5.0",
     "lodash": "^4.17.19",
     "moment": "^2.27.0",
     "node-spotify-api": "^1.1.1",
