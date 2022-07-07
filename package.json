@@ -22,7 +22,7 @@
     "jquery": "^3.5.1",
     "jsdom": "^14.1.0",
     "lodash": "^4.17.19",
-    "moment": "^2.27.0",
+    "moment": "^2.29.4",
     "node-spotify-api": "^1.1.1",
     "save": "^2.4.0"
   }
